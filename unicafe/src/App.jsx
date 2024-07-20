@@ -1,35 +1,73 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
 
-function App() {
-  const [count, setCount] = useState(0)
 
+const StatisticLine = ({ text, value }) => {
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <tr>
+      <td>{text}</td>
+      <td>{value}</td>
+    </tr>
   )
 }
 
-export default App
+const Statistics = ({ goods, neutral, bad }) => {
+  return (
+    <table>
+      <tbody>
+        <StatisticLine text="good" value={goods} />
+        <StatisticLine text="neutral" value={neutral} />
+        <StatisticLine text="bad" value={bad} />
+        <StatisticLine text="all" value={goods + neutral + bad} />
+        <StatisticLine text="average" value={(goods + neutral + bad) / 3} />
+        <StatisticLine text="positive" value={((goods + neutral) / (goods + neutral + bad)) * 100 + '%'} />
+      </tbody>
+    </table >
+  )
+}
+
+const Button = ({ text, onClick }) => {
+  return (
+    <button onClick={onClick}>{text}</button>
+  )
+}
+
+const App = () => {
+  const [goods, setGoods] = useState(0);
+  const [neutral, setNeutral] = useState(0);
+  const [bad, setBad] = useState(0);
+
+  const onGoodClick = () => {
+    setGoods(goods + 1);
+    console.log('hello')
+  };
+  const onNeutralClick = () => {
+    setNeutral(neutral + 1);
+  };
+  const onBadClick = () => {
+    setBad(bad + 1);
+  };
+
+  return (
+    <div>
+      <h1>Give feedback</h1>
+      <div>
+        <Button text="good" onClick={onGoodClick} />
+        <Button text="neutral" onClick={onNeutralClick} />
+        <Button text="bad" onClick={onBadClick} />
+
+      </div>
+
+      <br />
+      <h2>Statistics</h2>
+
+      {goods === 0 && neutral === 0 && bad === 0 ? (
+        <p>No feedback given</p>
+      ) : (
+        <Statistics goods={goods} neutral={neutral} bad={bad} />
+      )}
+
+    </div>
+  );
+}
+
+export default App;
